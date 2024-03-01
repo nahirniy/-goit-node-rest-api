@@ -45,13 +45,15 @@ export async function addContact(name, email, phone) {
   return newContact;
 }
 
-export async function updateById(id, data) {
+export async function updateById(id, newData) {
   const contacts = await listContacts();
+
   const index = contacts.findIndex((contact) => id === contact.id);
+  const currentContact = contacts[index];
 
   if (index === -1) return null;
 
-  contacts[index] = { id, ...data };
+  contacts[index] = { ...currentContact, ...newData };
 
   await fs.writeFile(contactsPath, JSON.stringify(contacts, null, 2));
 
