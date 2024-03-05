@@ -1,11 +1,17 @@
 import HttpError from "../helpers/HttpError.js";
-// import * as contactsServices from "../services/contactsServices.js";
-
 import { ctrlWrapper } from "../helpers/ctrlWrapper.js";
-import { Contact } from "../models/contacts.js";
+import { Contact } from "../models/contact.js";
 
 const getAllContacts = async (req, res, next) => {
-  const contacts = await Contact.find();
+  const { _id: owner } = req.user;
+  const { page = 1, limit = 2, favorite = false } = req.query;
+  const skip = (page - 1) * limit;
+  const conditions = { owner };
+
+  const contacts = await Contact.find({ owner, favorite }, "-createdAt -updatedAt", {
+    skip,
+    limit,
+  });
   res.json(contacts);
 };
 
@@ -29,8 +35,9 @@ const deleteContact = async (req, res, next) => {
 
 const createContact = async (req, res, next) => {
   const { name, email, phone, favorite = false } = req.body;
+  const { _id: owner } = req.user;
 
-  const contact = await Contact.create({ name, email, phone, favorite });
+  const contact = await Contact.create({ name, email, phone, favorite, owner });
 
   if (!contact) throw HttpError(404);
 
