@@ -1,16 +1,17 @@
 import HttpError from "../helpers/HttpError.js";
-import * as contactsServices from "../services/contactsServices.js";
+// import * as contactsServices from "../services/contactsServices.js";
 
 import { ctrlWrapper } from "../helpers/ctrlWrapper.js";
+import { Contact } from "../models/contacts.js";
 
 const getAllContacts = async (req, res, next) => {
-  const contacts = await contactsServices.listContacts();
+  const contacts = await Contact.find();
   res.json(contacts);
 };
 
 const getOneContact = async (req, res, next) => {
   const { id } = req.params;
-  const contact = await contactsServices.getContactById(id);
+  const contact = await Contact.findById(id);
 
   if (!contact) throw HttpError(404);
 
@@ -19,7 +20,7 @@ const getOneContact = async (req, res, next) => {
 
 const deleteContact = async (req, res, next) => {
   const { id } = req.params;
-  const contact = await contactsServices.removeContact(id);
+  const contact = await Contact.findByIdAndDelete(id);
 
   if (!contact) throw HttpError(404);
 
@@ -27,9 +28,9 @@ const deleteContact = async (req, res, next) => {
 };
 
 const createContact = async (req, res, next) => {
-  const { name, email, phone } = req.body;
+  const { name, email, phone, favorite = false } = req.body;
 
-  const contact = await contactsServices.addContact(name, email, phone);
+  const contact = await Contact.create({ name, email, phone, favorite });
 
   if (!contact) throw HttpError(404);
 
@@ -42,11 +43,21 @@ const updateContact = async (req, res, next) => {
 
   if (emptyBody) throw HttpError(400, "Body must have at least one field");
 
-  const contact = await contactsServices.updateById(id, req.body);
+  const contact = await Contact.findByIdAndUpdate(id, req.body, { new: true });
 
   if (!contact) throw HttpError(404);
 
-  res.status(201).json(contact);
+  res.json(contact);
+};
+
+const updateStatusContact = async (req, res, next) => {
+  const { id } = req.params;
+
+  const contact = await Contact.findByIdAndUpdate(id, req.body, { new: true });
+
+  if (!contact) throw HttpError(404);
+
+  res.json(contact);
 };
 
 export const ctrl = {
@@ -55,4 +66,5 @@ export const ctrl = {
   deleteContact: ctrlWrapper(deleteContact),
   createContact: ctrlWrapper(createContact),
   updateContact: ctrlWrapper(updateContact),
+  updateStatusContact: ctrlWrapper(updateStatusContact),
 };
