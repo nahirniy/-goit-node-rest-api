@@ -4,8 +4,8 @@ import { Contact } from "../models/contact.js";
 
 const getAllContacts = async (req, res, next) => {
   const { _id: owner } = req.user;
-  const { page = 1, limit = 2, favorite } = req.query;
-  const skip = (page - 1) * limit;
+  const { page, limit, favorite } = req.query;
+  const skip = page ? (page - 1) * limit : 0;
 
   const conditions = { owner };
 
@@ -13,7 +13,7 @@ const getAllContacts = async (req, res, next) => {
 
   const contacts = await Contact.find(conditions, "-createdAt -updatedAt", {
     skip,
-    limit,
+    limit: limit || 0,
   });
   res.json(contacts);
 };
