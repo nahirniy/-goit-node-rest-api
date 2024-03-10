@@ -46,7 +46,7 @@ const updateContact = async (req, res, next) => {
 
   if (!contact) throw HttpError(404);
 
-  res.status(201).json(contact);
+  res.json(contact);
 };
 
 export const ctrl = {
