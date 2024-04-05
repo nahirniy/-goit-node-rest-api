@@ -17,6 +17,13 @@ export const updateUserSubscShema = Joi.object({
     .valid(...subscriptionList),
 });
 
+export const updateUserAvatarShema = Joi.object({
+  avatarURL: {
+    type: String,
+    required: [true, "avatarURL is required"],
+  },
+});
+
 const userSchema = new Schema(
   {
     password: {
@@ -38,6 +45,10 @@ const userSchema = new Schema(
     token: {
       type: String,
       default: null,
+    },
+    avatarURL: {
+      type: String,
+      required: [true, "avatarURL is required"],
     },
   },
   { versionKey: false, timestamps: true }
