@@ -18,10 +18,7 @@ export const updateUserSubscShema = Joi.object({
 });
 
 export const updateUserAvatarShema = Joi.object({
-  avatarURL: {
-    type: String,
-    required: [true, "avatarURL is required"],
-  },
+  avatarURL: Joi.string().required(),
 });
 
 const userSchema = new Schema(

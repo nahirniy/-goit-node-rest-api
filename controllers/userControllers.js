@@ -76,6 +76,7 @@ const updateAvatar = async (req, res) => {
 
   const avatarPath = path.resolve("public", "avatar");
   const newPath = path.join(avatarPath, filename);
+  const avatarURL = path.join("avatars", filename);
 
   Jimp.read(oldPath, (err, image) => {
     if (err) throw err;
@@ -83,14 +84,10 @@ const updateAvatar = async (req, res) => {
     image.resize(250, 250).write(newPath);
   });
 
-  // const image = await Jimp.read(oldPath);
-  // image.resize(250, 250);
-
-  // await image.writeAsync(newPath);
   await fs.rename(oldPath, newPath);
-  await User.findByIdAndUpdate(_id, { avatarURL: newPath });
+  await User.findByIdAndUpdate(_id, { avatarURL });
 
-  res.json({ avatarURL: newPath });
+  res.json({ avatarURL });
 };
 
 export const ctrl = {
