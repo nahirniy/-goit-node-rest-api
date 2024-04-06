@@ -1,5 +1,5 @@
 import express from "express";
-import { createUserSchema, updateUserSubscShema, updateUserAvatarShema } from "../models/user.js";
+import { createUserSchema, updateUserSubscShema } from "../models/user.js";
 import { ctrl } from "../controllers/userControllers.js";
 import validateBody from "../middlewares/validateBody.js";
 import { authenticate } from "../middlewares/authenticate.js";
@@ -12,12 +12,6 @@ userRouter.post("/login", validateBody(createUserSchema), ctrl.login);
 userRouter.get("/current", authenticate, ctrl.getCurrent);
 userRouter.post("/logout", authenticate, ctrl.logout);
 userRouter.patch("/", authenticate, validateBody(updateUserSubscShema), ctrl.updateSubscription);
-userRouter.patch(
-  "/avatars",
-  upload.single("avatar"),
-  authenticate,
-  validateBody(updateUserAvatarShema),
-  ctrl.updateAvatar
-);
+userRouter.patch("/avatars", upload.single("avatar"), authenticate, ctrl.updateAvatar);
 
 export default userRouter;

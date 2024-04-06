@@ -17,10 +17,6 @@ export const updateUserSubscShema = Joi.object({
     .valid(...subscriptionList),
 });
 
-export const updateUserAvatarShema = Joi.object({
-  avatarURL: Joi.string().required(),
-});
-
 const userSchema = new Schema(
   {
     password: {
