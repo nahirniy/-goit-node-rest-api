@@ -6,6 +6,8 @@ import contactsRouter from "./routes/contactsRouter.js";
 import "dotenv/config";
 import userRouter from "./routes/userRouter.js";
 
+const { DB_HOST, PORT = 3000 } = process.env;
+
 const app = express();
 app.use(morgan("tiny"));
 app.use(cors());
@@ -23,8 +25,6 @@ app.use((err, req, res, next) => {
   const { status = 500, message = "Server error" } = err;
   res.status(status).json({ message });
 });
-
-const { DB_HOST, PORT = 3000 } = process.env;
 
 mongoose
   .connect(DB_HOST)

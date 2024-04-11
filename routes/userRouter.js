@@ -1,5 +1,5 @@
 import express from "express";
-import { createUserSchema, updateUserSubscShema } from "../models/user.js";
+import { createUserSchema, updateUserSubscShema, verifyUserSchema } from "../models/user.js";
 import { ctrl } from "../controllers/userControllers.js";
 import validateBody from "../middlewares/validateBody.js";
 import { authenticate } from "../middlewares/authenticate.js";
@@ -8,6 +8,10 @@ import upload from "../middlewares/upload.js";
 const userRouter = express.Router();
 
 userRouter.post("/register", validateBody(createUserSchema), ctrl.register);
+userRouter.post("/register", validateBody(createUserSchema), ctrl.register);
+userRouter.get("/verify/:verificationCode", ctrl.verify);
+userRouter.post("/verify", validateBody(verifyUserSchema), ctrl.resendVerify);
+
 userRouter.post("/login", validateBody(createUserSchema), ctrl.login);
 userRouter.get("/current", authenticate, ctrl.getCurrent);
 userRouter.post("/logout", authenticate, ctrl.logout);

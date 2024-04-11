@@ -17,6 +17,10 @@ export const updateUserSubscShema = Joi.object({
     .valid(...subscriptionList),
 });
 
+export const verifyUserSchema = Joi.object({
+  email: Joi.string().required().pattern(emailRegexp),
+});
+
 const userSchema = new Schema(
   {
     password: {
@@ -42,6 +46,14 @@ const userSchema = new Schema(
     avatarURL: {
       type: String,
       required: [true, "avatarURL is required"],
+    },
+    verify: {
+      type: Boolean,
+      default: false,
+    },
+    verificationCode: {
+      type: String,
+      required: [true, "verify code is required"],
     },
   },
   { versionKey: false, timestamps: true }
